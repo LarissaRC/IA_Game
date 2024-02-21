@@ -6,13 +6,14 @@ import math
 # Inicialização do Pygame
 pygame.init()
 
+
 # Configurações da tela
 WIDTH, HEIGHT = 600, 600
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Jogo do Agente")
 
 # Cores
-WHITE, RED, GREEN, BLUE = (255, 255, 255), (255, 0, 0), (0, 255, 0), (0, 0, 255)
+WHITE, BLACK, RED, GREEN, BLUE = (255, 255, 255), (0, 0, 0,), (255, 0, 0), (0, 255, 0), (0, 0, 255)
 
 # Configurações do Agente e do Jogo
 agent_size = 40
@@ -20,6 +21,12 @@ arrow_size = 20
 block_size = 30
 score = 0
 time_remaining = 30
+angle = 0
+
+# Carrega a imagem da nave
+nave_img = pygame.image.load("nave.png").convert_alpha()
+# Redimensiona a imagem da nave para o tamanho do agente
+nave_img = pygame.transform.scale(nave_img, (agent_size, agent_size))
 
 # Fonte para texto
 font = pygame.font.Font(None, 36)
@@ -81,6 +88,10 @@ keys_pressed = set()
 clock = pygame.time.Clock()
 game_active = True
 
+# Função para rotacionar a imagem
+def rotate_image(image, angle):
+    return pygame.transform.rotate(image, angle)
+
 while game_active:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -138,22 +149,27 @@ while game_active:
     time_remaining -= 1 / 60  # subtrai 1 segundo a cada iteração
 
     # Limpa a tela
-    screen.fill(WHITE)
+    screen.fill(BLACK)
 
     # Desenha o agente
-    pygame.draw.rect(screen, BLUE, (*agent_pos, agent_size, agent_size))
+    rotated_nave_img = rotate_image(nave_img, angle)  # angle é o ângulo de rotação
+    screen.blit(rotated_nave_img, agent_pos)
 
     # Desenha o indicador de direção do agente
     indicator_size = 10
     indicator_offset = 10
     if agent_direction == 0:  # Cima
         indicator_pos = [agent_pos[0] + (agent_size - indicator_size) // 2, agent_pos[1] - indicator_size - indicator_offset]
+        angle = 0
     elif agent_direction == 1:  # Direita
         indicator_pos = [agent_pos[0] + agent_size + indicator_offset, agent_pos[1] + (agent_size - indicator_size) // 2]
+        angle = -90
     elif agent_direction == 2:  # Baixo
         indicator_pos = [agent_pos[0] + (agent_size - indicator_size) // 2, agent_pos[1] + agent_size + indicator_offset]
+        angle = 180
     else:  # Esquerda
         indicator_pos = [agent_pos[0] - indicator_size - indicator_offset, agent_pos[1] + (agent_size - indicator_size) // 2]
+        angle = 90
 
     pygame.draw.rect(screen, RED, (*indicator_pos, indicator_size, indicator_size))
 
@@ -162,11 +178,11 @@ while game_active:
         pygame.draw.rect(screen, block["type"], (*block["pos"], block_size, block_size))
 
     # Exibe os pontos
-    score_text = font.render(f"SCORE: {max(0, score)}", True, BLUE)
+    score_text = font.render(f"SCORE: {max(0, score)}", True, WHITE)
     screen.blit(score_text, (WIDTH - 150, 20))
 
     # Exibe o tempo restante
-    time_text = font.render(f"Seconds left: {max(0, int(time_remaining))}s", True, BLUE)
+    time_text = font.render(f"Seconds left: {max(0, int(time_remaining))}s", True, WHITE)
     screen.blit(time_text, (20, 20))
 
     pygame.display.flip()
@@ -184,7 +200,7 @@ while True:
             sys.exit()
 
     # Exibe mensagem de fim de jogo
-    end_text = font.render(f"Fim de jogo! Pontuação final: {max(0, score)}", True, BLUE)
+    end_text = font.render(f"Fim de jogo! Pontuação final: {max(0, score)}", True, WHITE)
     screen.blit(end_text, (WIDTH // 4, HEIGHT // 2 - 50))
 
     pygame.display.flip()
