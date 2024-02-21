@@ -127,31 +127,26 @@ def choose_action_auto(state):
 def perform_action(action):
     global agent_direction, agent_pos, score, blocks
 
+    previous_state = get_game_state(agent_direction, blocks)
+    reward = -0.1  # Penalidade leve por movimento, para encorajar a eficiência
+
     # Muda a direção do agente
     if action == 0:
-        previous_state = get_game_state(agent_direction, blocks)
-        reward = -0.1  # Penalidade leve por movimento, para encorajar a eficiência
         agent_direction = 0
         current_state = get_game_state(agent_direction, blocks)
         # Atualiza a Q-table com base nas recompensas
         update_Q_table(previous_state, current_state, action, reward)
     elif action == 1:
-        previous_state = get_game_state(agent_direction, blocks)
-        reward = -0.1  # Penalidade leve por movimento, para encorajar a eficiência
         agent_direction = 1
         current_state = get_game_state(agent_direction, blocks)
         # Atualiza a Q-table com base nas recompensas
         update_Q_table(previous_state, current_state, action, reward)
     elif action == 2:
-        previous_state = get_game_state(agent_direction, blocks)
-        reward = -0.1  # Penalidade leve por movimento, para encorajar a eficiência
         agent_direction = 2
         current_state = get_game_state(agent_direction, blocks)
         # Atualiza a Q-table com base nas recompensas
         update_Q_table(previous_state, current_state, action, reward)
     elif action == 3:
-        previous_state = get_game_state(agent_direction, blocks)
-        reward = -0.1  # Penalidade leve por movimento, para encorajar a eficiência
         agent_direction = 3
         current_state = get_game_state(agent_direction, blocks)
         # Atualiza a Q-table com base nas recompensas
@@ -165,6 +160,14 @@ clock = pygame.time.Clock()
 game_active = True
 
 while game_active:
+
+    # Escolhe automaticamente a ação com base na Q-table
+    current_state = get_game_state(agent_direction, blocks)
+    action = choose_action_auto(current_state)
+
+    # Executa a ação escolhida automaticamente
+    perform_action(action)
+    
     # Gera blocos com um intervalo de tempo
     current_time = pygame.time.get_ticks()
     if current_time - last_block_generation_time > block_generation_interval * 250:
@@ -207,13 +210,6 @@ while game_active:
 
             # Atualiza a Q-table com base nas recompensas
             update_Q_table(previous_state, current_state, action, reward)
-
-    # Escolhe automaticamente a ação com base na Q-table
-    current_state = get_game_state(agent_direction, blocks)
-    action = choose_action_auto(current_state)
-
-    # Executa a ação escolhida automaticamente
-    perform_action(action)
 
     # Limpa a tela
     screen.fill(WHITE)

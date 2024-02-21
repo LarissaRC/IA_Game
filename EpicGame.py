@@ -99,9 +99,7 @@ while game_active:
         elif event.type == pygame.KEYDOWN:
             keys_pressed.add(event.key)
         elif event.type == pygame.KEYUP:
-            # Verifica se o jogador pressionou a tecla de espaço para destruir blocos
-            if pygame.K_SPACE in keys_pressed:
-                destroy_blocks()
+            destroy_blocks()
 
             keys_pressed.discard(event.key)
 
