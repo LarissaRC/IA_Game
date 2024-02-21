@@ -105,20 +105,20 @@ while game_active:
 
     # Gera blocos com um intervalo de tempo
     current_time = pygame.time.get_ticks()
-    if current_time - last_block_generation_time > block_generation_interval * 1000:
+    if current_time - last_block_generation_time > block_generation_interval * 500:
         generate_blocks()
         last_block_generation_time = current_time
 
     # Movimenta os blocos
     for block in blocks:
         if block["direction"] == 0:  # Cima
-            block["pos"][1] += 1
+            block["pos"][1] += 2
         elif block["direction"] == 1:  # Direita
-            block["pos"][0] -= 1
+            block["pos"][0] -= 2
         elif block["direction"] == 2:  # Baixo
-            block["pos"][1] -= 1
+            block["pos"][1] -= 2
         elif block["direction"] == 3:  # Esquerda
-            block["pos"][0] += 1
+            block["pos"][0] += 2
 
     # Verifica colisões
     for block in blocks:
