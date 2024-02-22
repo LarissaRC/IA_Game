@@ -176,7 +176,7 @@ while game_active:
         pygame.draw.rect(screen, block["type"], (*block["pos"], block_size, block_size))
 
     # Exibe os pontos
-    score_text = font.render(f"SCORE: {max(0, score)}", True, WHITE)
+    score_text = font.render(f"SCORE: {score}", True, WHITE)
     screen.blit(score_text, (WIDTH - 150, 20))
 
     # Exibe o tempo restante
